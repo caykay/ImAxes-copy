@@ -74,11 +74,11 @@ public class SceneManager : MonoBehaviour
                 axis.Init(dataObject, i, false);
                 obj.transform.rotation = Quaternion.Euler(0, 0, 90);
                 float h = obj.GetComponent<BoxCollider>().size.y;
-                h = 0.28478623553f;
+                h = obj.transform.localScale.y * h;
                 Debug.Log("height = " + (h).ToString());
-                Debug.Log("height/2 = " + (h/2).ToString());
+                Debug.Log("Yscale = " + (obj.transform.localScale.y).ToString());
                 Vector3 adjPos = positions[i - 1];  // position of the axis adjacent/close to the current axis
-                Vector3 newPos = new Vector3(adjPos.x - .35f, adjPos.y - h/2, adjPos.z); // new posision will be at the base of the adjacent axix
+                Vector3 newPos = new Vector3(adjPos.x - h/2, adjPos.y - h/2, adjPos.z); // new posision will be at the base of the adjacent axix
                 obj.transform.position = newPos;
                 float xDiff = positions[12].x - adjPos.x;
                 Debug.Log(xDiff);
