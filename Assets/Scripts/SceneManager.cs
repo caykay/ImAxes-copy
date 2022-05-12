@@ -8,6 +8,8 @@ public class SceneManager : MonoBehaviour
 {
 
     public List<Axis> sceneAxes { get; internal set; }
+    List<Vector3> positions { get; set; }
+
 
     public DataBinding.DataObject dataObject;
 
@@ -55,19 +57,47 @@ public class SceneManager : MonoBehaviour
         VisualisationAttributes.Instance.colors = Colors.mapColorPalette(SceneManager.Instance.dataObject.getDimension(VisualisationAttributes.Instance.ColoredAttribute), indexCategoryToColor);
 
         // create the axis
-
+        positions = new List<Vector3>();
         for (int i = 0; i < dataObject.Identifiers.Length; ++i)
         {
+
             Vector3 v = new Vector3(1.352134f - (i % 7) * 0.35f, 1.506231f - (i / 7) / 2f, 0f);// -0.4875801f);
+            positions.Add(v);
             GameObject obj = (GameObject)Instantiate(axisPrefab);
             obj.transform.position = v;
             Axis axis = obj.GetComponent<Axis>();
-            axis.Init(dataObject, i, true);
-            axis.InitOrigin(v, obj.transform.rotation);
+
+            // TESTING
+            if (i == 12)
+            {
+                Debug.Log("Check here");
+                axis.Init(dataObject, i, false);
+                obj.transform.rotation = Quaternion.Euler(0, 0, 90);
+                float h = obj.GetComponent<BoxCollider>().size.y;
+                h = 0.28478623553f;
+                Debug.Log("height = " + (h).ToString());
+                Debug.Log("height/2 = " + (h/2).ToString());
+                Vector3 adjPos = positions[i - 1];  // position of the axis adjacent/close to the current axis
+                Vector3 newPos = new Vector3(adjPos.x - .35f, adjPos.y - h/2, adjPos.z); // new posision will be at the base of the adjacent axix
+                obj.transform.position = newPos;
+                float xDiff = positions[12].x - adjPos.x;
+                Debug.Log(xDiff);
+                Debug.Log(axis.transform.position.x.ToString() + " " + newPos.x.ToString());
+                axis.InitOrigin(newPos, obj.transform.rotation);
+
+            }
+            else {
+                axis.Init(dataObject, i, true);
+                axis.InitOrigin(v, obj.transform.rotation);
+            }
+            
             axis.tag = "Axis";
 
             AddAxis(axis);
         }
+
+
+    //testing: creating a perpendicular axis
 
     }
 
